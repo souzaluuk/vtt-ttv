@@ -1,4 +1,4 @@
-#!/bin/bahs
+#!/bin/bash
 
 sudo pip install virtualenv
 
