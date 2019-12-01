@@ -22,4 +22,9 @@ def audio_to_text():
 
 @app.route('/text', methods=['POST'])
 def text_to_audio():
-    pass
+    text = request.form.get('text')
+    language = request.form.get('language')
+    
+    language = language if language else 'en-US'
+    
+    return recognizer.text_to_voice(text, language)
