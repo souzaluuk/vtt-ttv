@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta
+      name="author"
+      content="Mark Otto, Jacob Thornton, and Bootstrap contributors"
+    />
+    <meta name="generator" content="Jekyll v3.8.6" />
+    <title>Sticky Footer Template · Bootstrap</title>
+
+    <link
+      rel="canonical"
+      href="https://getbootstrap.com/docs/4.4/examples/sticky-footer/"
+    />
+
+    <!-- Bootstrap core CSS -->
+    <link
+      href="https://getbootstrap.com/docs/4.4/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+
+    <meta name="theme-color" content="#563d7c" />
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="sticky-footer.css" rel="stylesheet" />
+  </head>
+  <body class="d-flex flex-column h-100">
+    <!-- Begin page content -->
+    <main role="main" class="flex-shrink-0">
+      <br />
+      <div class="container">
+        <h3>Conversão de texto para voz</h3>
+        <form>
+          <div class="form-group">
+            <label for="selectLanguage">Selecione uma língua</label>
+            <select class="form-control" id="selectLanguage">
+              <option value="pt">pt-BR</option>
+              <option value="en">en-US</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="textAreaInput">Texto para conversão</label>
+            <textarea
+              id="textAreaInput"
+              class="form-control"
+              rows="3"
+            ></textarea>
+          </div>
+        </form>
+        <div class="d-flex justify-content-center">
+          <button onclick="getAudioByText()" class="btn btn-primary">
+            Converter
+          </button>
+        </div>
+      </div>
+      <br />
+      <hr />
+      <br />
+      <div class="container">
+        <h3>Conversão de voz para texto</h3>
+        <form>
+          <div class="form-group">
+            <label for="selectLanguageAudio">Selecione uma língua</label>
+            <select class="form-control" id="selectLanguageAudio">
+              <option value="pt-BR">pt-BR</option>
+              <option value="en-US">en-US</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="exampleFormControlFile1">Entre com o áudio</label>
+            <input type="file" class="form-control-file" id="inputFileAudio" />
+          </div>
+          <label for="textAreaOutput">Texto obtido</label>
+          <textarea
+            readonly
+            id="textAreaOutput"
+            class="form-control"
+            rows="3"
+          ></textarea>
+        </form>
+        <br />
+        <div class="d-flex justify-content-center">
+          <button onclick="getTextByAudio()" class="btn btn-primary">
+            Converter
+          </button>
+        </div>
+      </div>
+      <br />
+    </main>
+  </body>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script
+    src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+    crossorigin="anonymous"
+  ></script>
+  <script>
+    function getAudioByText() {
+      const audio = new Audio();
+      const text = document.getElementById("textAreaInput").value;
+      const language = document.getElementById("selectLanguage").value;
+      audio.src = "/text?text=" + text + "&language=" + language;
+      audio.play();
+    }
+
+    function getTextByAudio() {
+
+      const language = document.getElementById("selectLanguageAudio").value;
+      const file = document.getElementById("inputFileAudio").files[0];
+      const outText = document.getElementById("textAreaOutput");
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("language", language);
+
+      axios
+        .post("/audio", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        })
+        .then(res => {
+          outText.value = res.data;
+        });
+    }
+  </script>
+</html>

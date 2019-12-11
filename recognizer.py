@@ -3,24 +3,24 @@ from flask import send_file
 from gtts import gTTS
 from pydub import AudioSegment
 
-recognizer = sr.Recognizer()
-
 def voice_to_text(file, language):
+    recognizer = sr.Recognizer()
+    
     response = ''
     if not file:
         return response
 
-    voice = sr.AudioFile(file)
+    voiceFile = sr.AudioFile(file)
     max = 60  # in ms
-
-    with voice as source:
+    
+    audio = None
+    with voiceFile as source:
         if source.DURATION < max:
             audio = recognizer.record(source)
         else:
             audio = recognizer.record(source, duration=max)
-        response = recognizer.recognize_google(audio, language=language)
 
-    return response
+    return recognizer.recognize_google(audio, language=language) if audio else ''
 
 def text_to_voice(text, language):
     name_file_mp3 = '.tmp.mp3'
@@ -34,4 +34,4 @@ def text_to_voice(text, language):
     sound = AudioSegment.from_mp3(name_file_mp3)
     sound.export(name_file_wav, format='wav')
     
-    return send_file(name_file_wav)
+    return send_file(name_file_wav,attachment_filename="audio.wav",as_attachment=True)
