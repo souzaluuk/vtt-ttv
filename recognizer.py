@@ -1,6 +1,7 @@
 import speech_recognition as sr
 from flask import send_file
 from gtts import gTTS
+from pydub import AudioSegment
 
 recognizer = sr.Recognizer()
 
@@ -13,7 +14,6 @@ def voice_to_text(file, language):
     max = 60  # in ms
 
     with voice as source:
-        recognizer.adjust_for_ambient_noise(source)
         if source.DURATION < max:
             audio = recognizer.record(source)
         else:
@@ -23,10 +23,15 @@ def voice_to_text(file, language):
     return response
 
 def text_to_voice(text, language):
-    name_file = '.tmp.mp3'
+    name_file_mp3 = '.tmp.mp3'
+    name_file_wav = '.tmp.wav'
+    
     tts = gTTS(text, lang=language)
 
-    with open(name_file, 'wb') as file:
+    with open(name_file_mp3, 'wb') as file:
         tts.write_to_fp(file)
 
-    return send_file(name_file, mimetype='audio/mp3')
+    sound = AudioSegment.from_mp3(name_file_mp3)
+    sound.export(name_file_wav, format='wav')
+    
+    return send_file(name_file_wav)
