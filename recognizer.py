@@ -2,6 +2,7 @@ import speech_recognition as sr
 from flask import send_file
 from gtts import gTTS
 from pydub import AudioSegment
+from hashlib import sha1
 
 def voice_to_text(file, language):
     recognizer = sr.Recognizer()
@@ -23,8 +24,13 @@ def voice_to_text(file, language):
     return recognizer.recognize_google(audio, language=language) if audio else ''
 
 def text_to_voice(text, language):
-    name_file_mp3 = '.tmp.mp3'
-    name_file_wav = '.tmp.wav'
+    path_tmp = '/tmp/'
+    
+    gen_hash = sha1()
+    gen_hash.update(bytes(text,'utf-8'))
+    
+    name_file_mp3 = path_tmp+gen_hash.hexdigest()+'.mp3'
+    name_file_wav = path_tmp+gen_hash.hexdigest()+'.wav'
     
     tts = gTTS(text, lang=language)
 
