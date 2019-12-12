@@ -75,6 +75,9 @@
           <button onclick="getAudioByText()" class="btn btn-primary">
             Converter
           </button>
+          <button onclick="window.open(downlodAudio(),'_blank');" class="btn btn-primary">
+            Download
+          </button>
         </div>
       </div>
       <br />
@@ -127,8 +130,13 @@
       audio.play();
     }
 
-    function getTextByAudio() {
+    function downlodAudio() {
+      const text = document.getElementById("textAreaInput").value;
+      const language = document.getElementById("selectLanguage").value;
+      return "/text?text=" + text + "&language=" + language;
+    }
 
+    function getTextByAudio() {
       const language = document.getElementById("selectLanguageAudio").value;
       const file = document.getElementById("inputFileAudio").files[0];
       const outText = document.getElementById("textAreaOutput");
